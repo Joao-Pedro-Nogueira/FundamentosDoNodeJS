@@ -50,7 +50,9 @@ const server = http.createServer((req, res) => {
       email: 'jpedronogueira.dev@gmail.com'
     })
 
-    return res.end('Criação de usuários')
+    return res
+      .writeHead(201) //201 -> New ressourse created successfully
+      .end() // Não presisa de nenhuma informação adicional
   }
 
   if (method === 'PUT' && url === '/users') {
@@ -65,7 +67,10 @@ const server = http.createServer((req, res) => {
     return res.end('Deleção de usuários')
   }
 
-  return res.end('Hello world')
+  return res.writeHead(404).end('Not found :(')
 })
 
 server.listen(3333) // localhost:3333
+
+// HTTP status code => Códigos numéricos que indicam o que aconteceu com a requisição. Se deu certo, se deu erro, que tipo de erro... Documentação: (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
+// Se nenhum status for retornado, o padrão é 200 (OK | Success) genérico.
