@@ -1,9 +1,6 @@
 Stateful != Stateless
-Stateful sempre tem uma informação sendo guardada em memória e depende dessa memória para que ela continue funionando
+Stateful sempre tem uma informação sendo guardada em memória e depende dessa memória para que ela continue funionando. Caso o servidor seja reiniciado, tudo o que estava armazenado se perde.
 Stateless não salva as informações em memória. Geralmente armazena em dispositivos externos. Portanto ela não depende da memória e pode ser reiniciada e irá manter o comportamento normal.
-
-Headers (requisição e resposta) => METADADOS para que tanto o FE quanto o BE saibam lidar com determinada requisição ou resposta. Documentação: (https://developer.mozilla.org/en-US/docs/Web/API/Headers)
-Podem ser utilizados back-end <-> front-end.
 
 Rota HTTP = API
 Rotas HTTP no servidor são caminhos de entrada na aplicação para receber requisições e enviar respostas.
@@ -21,5 +18,14 @@ PUT -> EDIÇÃO DE USUÁRIOS -> Atualização de um recurso (quase) por completo
 PATCH -> EDIÇÃO DE USUÁRIOS -> Atualização de uma informação específica de um recurso no back-end
 DELETE -> REMOÇÃO DE USUÁRIOS -> Deleção de um recurso no back-end
 
+Headers (requisição e resposta) => METADADOS para que tanto o FE quanto o BE saibam lidar com determinada requisição ou resposta. Documentação: (https://developer.mozilla.org/en-US/docs/Web/API/Headers)
+Podem ser utilizados back-end <-> front-end.
+
 HTTP status code => Códigos numéricos que indicam o que aconteceu com a requisição. Se deu certo, se deu erro, que tipo de erro... Documentação: (https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 Se nenhum status for retornado, o padrão é 200 (OK | Success) genérico.
+
+Existem 2 tipos de stream: Readable stream & writeable stream. Stream de leitura e escrita.
+No caso do Spotify o back-end envia dados por streaming, portanto, é uma readable stream.
+Segundo o Diego, é muito fácil trabalhar com stream...
+No Node, toda porta de entrada e saída é uma porta de stream, portanto, toda requisição e toda resposta pode ser enviada/recebida aos poucos, em forma de stream.
+Para ver os fundamentos, usaremos o stdin e stdout.
