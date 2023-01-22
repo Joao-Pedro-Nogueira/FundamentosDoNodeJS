@@ -12,25 +12,39 @@ const users = []
 // A resposta dada ao Array não pode ser um Array, portanto iremos utilizar JSON - JavaScript Object Notation (string). Muito utilizado na comunicação back-end <-> front-end & back-end <-> back-end
 
 // Argumentos: require (req) e response (res). Utilizado para acessar os respectivos dados
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const { method, url } = req
 
-  if (method === 'GET' && url === '/users') {
-    return res
-      .setHeader('Content-type', 'aplication/json')
-      .end(JSON.stringify(users))
+  const buffers = []
+
+  for await (const chunk of req) {
+    buffers.push(chunk)
+  }
+
+  try {
+    req.body = JSON.parse(Buffer.concat(buffers).toString())
+  } catch {
+    req.body = null
   }
 
   if (method === 'POST' && url === '/users') {
+    const { name, email } = req.body
+
     users.push({
       id: 1,
-      name: 'João',
-      email: 'jpedronogueira.dev@gmail.com'
+      name,
+      email
     })
 
     return res
       .writeHead(201) //201 -> New ressourse created successfully
       .end() // Não presisa de nenhuma informação adicional
+  }
+
+  if (method === 'GET' && url === '/users') {
+    return res
+      .setHeader('Content-type', 'aplication/json')
+      .end(JSON.stringify(users))
   }
 
   if (method === 'PUT' && url === '/users') {
