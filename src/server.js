@@ -1,18 +1,13 @@
 import http from 'node:http'
-import { randomUUID } from 'node:crypto'
-import { Database } from './database.js'
 import { json } from './middlewares/json.js'
+import { routes } from './routes.js'
 
 // CommonJS => const givenModuleName = require('moduleName)
 // ESModules => import { givenModuleName } from 'moduleName'
 // Para usar o ESModules, ir no package.json e adicionar a propriedade "type": "module"
 // Para utilizar módulos próprios do Node, utilize a sintaxe da importação como do http acima ('node:${módulo}')
 
-// Primeiramente iremos trabalhar com uma aplicação STATEFUL.
-
-const database = new Database()
-
-// A resposta dada ao Array não pode ser um Array, portanto iremos utilizar JSON - JavaScript Object Notation (string). Muito utilizado na comunicação back-end <-> front-end & back-end <-> back-end
+// A resposta dada não pode ser um Array, portanto iremos utilizar JSON - JavaScript Object Notation (string). Muito utilizado na comunicação back-end <-> front-end & back-end <-> back-end
 
 // Argumentos: require (req) e response (res). Utilizado para acessar os respectivos dados
 const server = http.createServer(async (req, res) => {
@@ -20,38 +15,12 @@ const server = http.createServer(async (req, res) => {
 
   await json(req, res)
 
-  if (method === 'POST' && url === '/users') {
-    const { name, email } = req.body
+  const route = routes.find(route => {
+    return route.method === method && route.path === url
+  })
 
-    const user = {
-      id: randomUUID(),
-      name,
-      email
-    }
-
-    database.insert('users', user)
-
-    return res
-      .writeHead(201) //201 -> New ressourse created successfully
-      .end() // Não presisa de nenhuma informação adicional
-  }
-
-  if (method === 'GET' && url === '/users') {
-    const users = database.select('users')
-
-    return res.end(JSON.stringify(users))
-  }
-
-  if (method === 'PUT' && url === '/users') {
-    return res.end('Alteração de usuários')
-  }
-
-  if (method === 'PATCH' && url === '/users') {
-    return res.end('Alteração parcial de usuários')
-  }
-
-  if (method === 'DELETE' && url === '/users') {
-    return res.end('Deleção de usuários')
+  if (!!route) {
+    return route.handler(req, res)
   }
 
   return res.writeHead(404).end('Not found :(')
