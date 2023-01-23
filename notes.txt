@@ -29,3 +29,15 @@ No caso do Spotify o back-end envia dados por streaming, portanto, é uma readab
 Segundo o Diego, é muito fácil trabalhar com stream...
 No Node, toda porta de entrada e saída é uma porta de stream, portanto, toda requisição e toda resposta pode ser enviada/recebida aos poucos, em forma de stream.
 Para ver os fundamentos, usaremos o stdin e stdout.
+
+Existem 3 formas para o Front-end enviar informações para a API:
+-> Query Parameters (URL stateful): Parâmetros nomeados que são enviados no próprio url:
+http://localhost:3333/users?userId=1 => Aqui o Query parameter é o userId, que tem o valor 1
+http://localhost:3333/users?userId=1&name=PedroNogueira => Pode ser concatenado com '&'
+//
+-> Route Parameters: Parâmetros não nomeados que são armazenados na URL: http://localhost:3333/1
+Muito utilizado para identificar um recurso no back-end: 
+GET http://localhost:3333/14 (Exibir apenas o 14° usuário)
+
+-> Request Body: Utilizado para envio de informações sensíveis e em grande quantidade
+Pode ser utilizado para envio de formulários. Não fica armazenado na URL
